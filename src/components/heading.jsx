@@ -9,8 +9,8 @@
 // }
 
 const headingStyle = {
-  color: 'red',
-  fontSize: '30px',
+  // color: 'red',
+  // fontSize: '30px',
 }
 
 function Heading({ title, description, onShowAlert }) {

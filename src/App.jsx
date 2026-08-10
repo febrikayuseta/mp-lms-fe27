@@ -36,6 +36,8 @@ function App() {
     setSelected('a')
   }
 
+  const [isDark, setIsDark] = useState(false)
+
   return (
     <>
       <Heading title='halo-1' description='ini deskripsi' onShowAlert={showingAlert}  />
@@ -56,11 +58,24 @@ function App() {
       </form>
 
 
-      <p className="">hello {materi} {LESSON_TODAY} {name}</p>
+      <p style={{color: 'red'}} className="text-4xl text-blue-500">hello {materi} {LESSON_TODAY} {name}</p>
       {/* template literal */}
       <p>{`hello ${materi}`} pilihanku {selected}</p>
       <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
     
+
+      {/* show use tailwind */}
+      {/* <div className="bg-red-400 p-10 rounded-2xl text-white text-2xl"> */}
+      <div className={`${isDark ? 'bg-red-200' : 'bg-red-400'} p-10 rounded-2xl text-white text-2xl`}>
+        <p>lorem</p>
+      </div>
+
+      <button 
+        onClick={()=> setIsDark(!isDark)}
+        className="bg-blue-500 cursor-pointer hover:bg-blue-700 p-5 text-sm text-white rounded-2xl"
+      >
+          click to change bg
+      </button>
     
     </>
   )
