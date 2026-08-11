@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -38,6 +38,81 @@ function App() {
 
   const [isDark, setIsDark] = useState(false)
 
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(()=> {
+    console.log('running')
+  }, [isDark, count])
+
+  useEffect(()=> {
+    const timer = setInterval(() => {
+      console.log('tik')
+    }, 1000)
+
+    return () => {
+      clearInterval(timer);
+    }
+  }, [])
+
+  // useEffect(() => {
+  //   fetch('https://jsonplaceholder.typicode.com/users')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setUsers(data)
+  //     })
+  //     .catch((err) => {
+  //       setError(err.message)
+  //     })
+  //     .finally(() => {
+  //       setLoading(false)
+  //     })
+  // }, [])
+  
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users')
+        const data = await response.json()
+        setUsers(data)
+      } catch (error) {
+        setError(error.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  function fetchingUsers(userId) {
+    return new Promise((resolve, reject) => {
+      console.log("fetch users");
+
+      setTimeout(() => {
+        if(userId > 0) {
+          resolve({id: userId, name: "andika"})
+        } else {
+          reject({message: "user not found"})
+        }
+      }, 2000)
+    })
+  }
+
+  useEffect(() => {
+    async function fetchUser(userId) {
+      try {
+        const response = await fetchingUsers(userId)
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUser(0)
+  }, [])
+
+
   return (
     <>
       <Heading title='halo-1' description='ini deskripsi' onShowAlert={showingAlert}  />
@@ -70,7 +145,26 @@ function App() {
         <p>lorem</p>
       </div>
 
-      <button 
+      <h2 className="text-2xl font-bold mt-5">User List</h2>
+      {loading && <p>Loading...</p>}
+      {error && <p className="text-red-500">Error: {error}</p>}
+      <ul>
+        {users.map((user) => (
+          <li key={user.id} className="p-2 border-b">
+            {user.name} - {user.email}
+          </li>
+        ))}
+        {users.map((user) => {
+          const name = `nama user: ${user.name}`
+          return (
+            <li key={user.id} className="p-2 border-b">
+              {name} - {user.email}
+            </li>
+          )
+        })}
+      </ul>
+
+      <button
         onClick={()=> setIsDark(!isDark)}
         className="bg-blue-500 cursor-pointer hover:bg-blue-700 p-5 text-sm text-white rounded-2xl"
       >
