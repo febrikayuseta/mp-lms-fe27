@@ -1,177 +1,128 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-// import dari named xport
-// import { Heading } from './components/heading'
-import Heading from './components/heading'
-import { LESSON_TODAY } from './constant'
-
+import { useState } from 'react'
+import TugasList from './components/TugasList'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [name, setName] = useState('')
-  const [selected, setSelected] = useState('a')
-  const materi = 'dibimbing'
+  const [tugas, setTugas] = useState([
+    { id: 1, teks: 'Belajar React' },
+    { id: 2, teks: 'Ngoding CRUD' },
+    { id: 3, teks: 'Ngoding CRUD' },
+  ])
 
-  const showingAlert = () => {
-    setCount((count) => count + 1)
-    alert('halo')
-  }
+  const [teks, setTeks] = useState('')
+  const [editId, setEditId] = useState(null)
+  const [editTeks, setEditTeks] = useState('')
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-
-    if(name === '') {
-      alert('ga ada nama!')
+  function tambah() {
+    if (teks.trim() === '') {
+      alert('Tugas tidak boleh kosong')
       return;
     }
+    
+    // shorthand js
+    // const baru = { id: Date.now(), teks }
+    
+    const baru = { id: Date.now(), teks: teks }
+    setTugas([...tugas ,baru])
 
-    alert('nama kamu ' + name)
+    // alurnya spt ini
+    // setTugas([
+    //   { id: 1, teks: 'Belajar React' },
+    //   { id: 2, teks: 'Ngoding CRUD' },
+    //   { id: 3, teks: 'Ngoding CRUD' },
+    //   { id: Date.now(), teks: teks }
+    // ])
+
+    setTeks('')
   }
 
-  const onReset = () => {
-    setName('')
-    setSelected('a')
+  function mulaiEdit(item) {
+    setEditId(item.id)
+    setEditTeks(item.teks)
   }
 
-  const [isDark, setIsDark] = useState(false)
-
-  const [users, setUsers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(()=> {
-    console.log('running')
-  }, [isDark, count])
-
-  useEffect(()=> {
-    const timer = setInterval(() => {
-      console.log('tik')
-    }, 1000)
-
-    return () => {
-      clearInterval(timer);
-    }
-  }, [])
-
-  // useEffect(() => {
-  //   fetch('https://jsonplaceholder.typicode.com/users')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setUsers(data)
-  //     })
-  //     .catch((err) => {
-  //       setError(err.message)
-  //     })
-  //     .finally(() => {
-  //       setLoading(false)
-  //     })
-  // }, [])
-  
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users')
-        const data = await response.json()
-        setUsers(data)
-      } catch (error) {
-        setError(error.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchUsers()
-  }, [])
-
-  function fetchingUsers(userId) {
-    return new Promise((resolve, reject) => {
-      console.log("fetch users");
-
-      setTimeout(() => {
-        if(userId > 0) {
-          resolve({id: userId, name: "andika"})
-        } else {
-          reject({message: "user not found"})
-        }
-      }, 2000)
-    })
+  function simpanEdit(id) {
+    console.log(id, editTeks)
+    setTugas(
+      tugas.map((t) => (t.id === id ? { ...t, teks: editTeks } : t))
+    )
+    {/* 
+      alur flow:
+      1. tugas di jejerin:
+       a. { id: 1, teks: 'Belajar React' },
+       b. { id: 2, teks: 'Ngoding CRUD' },
+       c. { id: 3, teks: 'Ngoding CRUD' },
+      2. cek id masing", 1,2,3
+      3. id = 1, apakah sama dengan t.id
+      4. ketika sama maka objectnya di replace dengan data baru
+         { ...t, teks: editTeks } 
+      5. kalau engga ketemu maka dia dibiarin aja
+      6. kalau udah di set ke tugas
+    ) */}
+    setEditId(null)
+    setEditTeks('')
   }
 
-  useEffect(() => {
-    async function fetchUser(userId) {
-      try {
-        const response = await fetchingUsers(userId)
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchUser(0)
-  }, [])
-
+  function hapus(id) {
+    setTugas(tugas.filter((t) => t.id !== id))
+    {/* 
+      alur flow:
+      1. kirim parameter id 1
+      2. tugas difilter yang mana yg bukan id 1
+      3. dua data, id 2 dan id 3
+      4. kalau udah di set ke tugas
+    ) */}
+  }
 
   return (
-    <>
-      <Heading title='halo-1' description='ini deskripsi' onShowAlert={showingAlert}  />
-      <Heading title='halo-2' />
-      <Heading title='halo-3' />
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-10 px-4">
+      <div className="max-w-lg mx-auto">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
+          Daftar Tugas
+        </h1>
+        <p className="text-gray-500 text-center mb-8">
+          Kelola tugas harianmu dengan mudah
+        </p>
 
-      <form onSubmit={onSubmit}>
-        <input required type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        {/* CREATE */}
+        <div className="flex gap-2 mb-6">
+          <input
+            value={teks}
+            onChange={(e) => setTeks(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && tambah()}
+            placeholder="Tulis tugas baru..."
+            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+          />
+          <button
+            onClick={tambah}
+            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-sm cursor-pointer transition"
+          >
+            Tambah
+          </button>
+        </div>
 
-        <select onChange={(e) => setSelected(e.target.value)} value={selected}>
-          <option value="a">a</option>
-          <option value="b">b</option>
-          <option value="c">c</option>
-        </select>
-        
-        <button type="submit">submit</button>
-        <button type="reset" onClick={onReset}>cancel</button>
-      </form>
+        {/* READ + UPDATE + DELETE */}
+        {tugas.length === 0 ? (
+          <p className="text-center text-gray-400 py-8">
+            Belum ada tugas. Yuk tambah!
+          </p>
+        ) : (
+          <TugasList
+            tugas={tugas}
+            editId={editId}
+            editTeks={editTeks}
+            setEditTeks={setEditTeks}
+            onEdit={mulaiEdit}
+            onSimpan={simpanEdit}
+            onBatal={() => setEditId(null)}
+            onHapus={hapus}
+          />
+        )}
 
-
-      <p style={{color: 'red'}} className="text-4xl text-blue-500">hello {materi} {LESSON_TODAY} {name}</p>
-      {/* template literal */}
-      <p>{`hello ${materi}`} pilihanku {selected}</p>
-      <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-    
-
-      {/* show use tailwind */}
-      {/* <div className="bg-red-400 p-10 rounded-2xl text-white text-2xl"> */}
-      <div className={`${isDark ? 'bg-red-200' : 'bg-red-400'} p-10 rounded-2xl text-white text-2xl`}>
-        <p>lorem</p>
+        <p className="text-center text-sm text-gray-400 mt-8">
+          {tugas.length} tugas tercatat
+        </p>
       </div>
-
-      <h2 className="text-2xl font-bold mt-5">User List</h2>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">Error: {error}</p>}
-      <ul>
-        {users.map((user) => (
-          <li key={user.id} className="p-2 border-b">
-            {user.name} - {user.email}
-          </li>
-        ))}
-        {users.map((user) => {
-          const name = `nama user: ${user.name}`
-          return (
-            <li key={user.id} className="p-2 border-b">
-              {name} - {user.email}
-            </li>
-          )
-        })}
-      </ul>
-
-      <button
-        onClick={()=> setIsDark(!isDark)}
-        className="bg-blue-500 cursor-pointer hover:bg-blue-700 p-5 text-sm text-white rounded-2xl"
-      >
-          click to change bg
-      </button>
-    
-    </>
+    </div>
   )
 }
 
