@@ -2,7 +2,7 @@ import { useState } from 'react'
 import TugasList from '../components/TugasList'
 
 // Halaman privat — hanya bisa diakses saat login
-function Dashboard() {
+function Dashboard({ user }) {
   const [tugas, setTugas] = useState([
     { id: 1, teks: 'Belajar React' },
     { id: 2, teks: 'Ngoding CRUD' },
@@ -44,7 +44,7 @@ function Dashboard() {
   return (
     <div className="max-w-lg mx-auto">
       <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-        Daftar Tugas
+        Dashboard — halo, {user?.email}
       </h1>
       <p className="text-gray-500 text-center mb-8">
         Kelola tugas harianmu dengan mudah
