@@ -2,7 +2,7 @@ import { useState } from 'react'
 import useFetch from '../hooks/useFetch'
 
 function Users() {
-  const { data, loading, post } = useFetch('/users?limit=10')
+  const { data, loading, post, del, put } = useFetch('/users?limit=10')
   const [users, setUsers] = useState([])
   const [ready, setReady] = useState(false)
 
@@ -44,6 +44,40 @@ function Users() {
     setFirstName('')
     setLastName('')
     setAge('')
+  }
+
+  function startEdit(user) {
+    setEditId(user.id)
+    setFirstName(user.firstName)
+    setLastName(user.lastName)
+    setAge(String(user.age))
+  }
+
+  async function handleUpdate(){
+    try {
+      const result = await put(`/users/${editId}`, {
+        firstName,
+        lastName,
+        age: Number(age),
+      })
+
+      setUsers(users.map((u) => (u.id === editId ? result : u)))
+      resetForm()
+    } catch (err) {
+      alert('Gagal mengupdate user: ' + err.message)
+    }
+  }
+
+  async function handleDelete(id){
+    const konfirmasi = window.confirm('Yakin ingin menghapus user ini?')
+    if (!konfirmasi) return
+
+    try {
+      await del(`/users/${id}`)
+      setUsers(users.filter((u) => u.id !== id))
+    } catch (err) {
+      alert('Gagal menghapus user: ' + err.message)
+    }
   }
 
   if (loading) {
@@ -89,7 +123,7 @@ function Users() {
             {editId ? (
               <>
                 <button
-                  onClick={() => {}}
+                  onClick={handleUpdate}
                   className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg cursor-pointer"
                 >
                   Simpan
@@ -121,6 +155,7 @@ function Users() {
               <th className="px-4 py-3 text-sm font-semibold text-gray-600">Nama</th>
               <th className="px-4 py-3 text-sm font-semibold text-gray-600">Email</th>
               <th className="px-4 py-3 text-sm font-semibold text-gray-600">Umur</th>
+              <th className="px-4 py-3 text-sm font-semibold text-gray-600">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -129,6 +164,20 @@ function Users() {
                 <td className="px-4 py-3 text-sm">{u.firstName} {u.lastName}</td>
                 <td className="px-4 py-3 text-sm text-gray-500">{u.email}</td>
                 <td className="px-4 py-3 text-sm">{u.age}</td>
+                <td className="px-4 py-3 text-sm">
+                  <button
+                    onClick={() => startEdit(u)}
+                    className="text-blue-500 hover:underline mr-3 cursor-pointer"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(u.id)}
+                    className="text-red-500 hover:underline cursor-pointer"
+                  >
+                    Hapus
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

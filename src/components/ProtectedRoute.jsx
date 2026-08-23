@@ -1,8 +1,10 @@
 import { Navigate } from 'react-router-dom'
 
-function ProtectedRoute({ isLoggedIn, children }) {
-  if (!isLoggedIn) {
-    // replace = tidak menumpuk history, jadi tombol back tak balik ke halaman privat
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('user')
+
+  if (!token) {
+    // Tidak ada data user di localStorage = belum login
     return <Navigate to="/login" replace />
   }
   return children

@@ -1,26 +1,28 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-// Form terkendali + validasi + autentikasi
-// Keamanan di sini hanya sisi front-end — di aplikasi nyata, validasi wajib dicek ulang di server
 function Login({ onLogin }) {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState({}) // { email, password, umum }
+  const [error, setError] = useState({})
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
 
     // 1. Validasi
     const err = {}
-    if (email.trim() === '') err.email = 'Email wajib diisi'
-    if (password.length < 6) err.password = 'Password minimal 6 karakter'
+    if (username.trim() === '') err.username = 'Username wajib diisi'
+    if (password.length < 4) err.password = 'Password minimal 4 karakter'
     setError(err)
-    if (Object.keys(err).length > 0) return // blokir submit
+    if (Object.keys(err).length > 0) return
 
-    // 2. Autentikasi
-    const pesan = onLogin(email, password) // null jika sukses
+    // 2. Login ke API
+    setLoading(true)
+    const pesan = await onLogin(username, password)
+    setLoading(false)
+
     if (pesan) {
       setError({ umum: pesan })
       return
@@ -37,13 +39,13 @@ function Login({ onLogin }) {
 
         <div className="mb-4">
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
           />
-          {error.email && <p className="text-red-500 text-sm mt-1">{error.email}</p>}
+          {error.username && <p className="text-red-500 text-sm mt-1">{error.username}</p>}
         </div>
 
         <div className="mb-4">
@@ -61,13 +63,14 @@ function Login({ onLogin }) {
 
         <button
           type="submit"
-          className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-sm cursor-pointer transition"
+          disabled={loading}
+          className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-sm cursor-pointer transition disabled:opacity-50"
         >
-          Masuk
+          {loading ? 'Loading...' : 'Masuk'}
         </button>
 
         <p className="text-center text-xs text-gray-400 mt-4">
-          Coba: admin@mail.com / user@mail.com — password: 123456
+          Coba: emilys / emilyspass
         </p>
       </form>
     </div>

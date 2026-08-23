@@ -3,37 +3,50 @@ import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
+import useFetch from './hooks/useFetch'
 import Home from './pages/Home'
 import About from './pages/About'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import AdminPanel from './pages/AdminPanel'
-
-// "database" dummy — di aplikasi nyata ini dari server
-const DAFTAR_USER = [
-  { email: 'admin@mail.com', password: '123456', role: 'admin' },
-  { email: 'user@mail.com', password: '123456', role: 'user' },
-]
+import Users from './pages/Users'
 
 function App() {
-  // null = belum login; { email, role } = sudah login
-  const [user, setUser] = useState(null)
+  // Ambil user dari localStorage saat pertama kali load
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('user')
+    return saved ? JSON.parse(saved) : null
+  })
+  const { post } = useFetch()
 
-  // Kembalikan pesan error, atau null jika sukses
-  function login(email, password) {
-    const user = DAFTAR_USER.find(
-      (u) => u.email === email && u.password === password
-    )
-    if (!user) return 'Email atau password salah'
-    setUser({ email: user.email, role: user.role })
-    return null
+  // Login via DummyJSON API — return error message atau null jika sukses
+  async function login(username, password) {
+    try {
+      const data = await post('/auth/login', { username, password })
+
+      if (data.message) {
+        return data.message
+      }
+
+      const userData = {
+        username: data.username,
+        email: data.email,
+        role: data.role,
+        token: data.accessToken,
+      }
+
+      setUser(userData)
+      localStorage.setItem('user', JSON.stringify(userData))
+      return null
+    } catch {
+      return 'Gagal terhubung ke server'
+    }
   }
 
   function logout() {
     setUser(null)
+    localStorage.removeItem('user')
   }
-
-  const isLoggedIn = user !== null
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100">
@@ -45,21 +58,31 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login onLogin={login} />} />
 
-          {/* Butuh login */}
+          {/* Butuh token (login) */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <ProtectedRoute>
                 <Dashboard user={user} />
               </ProtectedRoute>
             }
           />
 
-          {/* Butuh login DAN role admin (berlapis) */}
+          {/* CRUD Users — butuh token */}
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Butuh token DAN role admin */}
           <Route
             path="/admin"
             element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <ProtectedRoute>
                 <RoleRoute role={user?.role} izin="admin">
                   <AdminPanel />
                 </RoleRoute>
