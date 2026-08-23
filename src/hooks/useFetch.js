@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 
 const BASE_URL = import.meta.env.VITE_API_URL
 
-function useFetch(endpoint) {
+function useFetch(endpoint = null) {
   const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(endpoint !== null)
 
-  // GET — ambil data saat mount
+  // GET — ambil data saat mount (hanya jika endpoint diberikan)
   useEffect(() => {
+    if (!endpoint) return
     fetch(`${BASE_URL}${endpoint}`)
       .then((res) => res.json())
       .then((json) => {
