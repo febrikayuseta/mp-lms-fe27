@@ -11,6 +11,7 @@ import Login from './pages/Login'
 import AdminPanel from './pages/AdminPanel'
 import Users from './pages/Users'
 import UserDetail from './pages/UserDetail'
+import Register from './pages/Register'
 
 function App() {
   // Ambil user dari localStorage saat pertama kali load
@@ -58,6 +59,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login onLogin={login} />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Butuh token (login) */}
           <Route

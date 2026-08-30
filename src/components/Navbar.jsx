@@ -30,7 +30,10 @@ function Navbar({ user, onLogout }) {
             </button>
           </>
         ) : (
-          <NavLink to="/login" className={style}>Login</NavLink>
+          <>
+            <NavLink to="/register" className={style}>Register</NavLink>
+            <NavLink to="/login" className={style}>Login</NavLink>
+          </>
         )}
       </span>
     </nav>

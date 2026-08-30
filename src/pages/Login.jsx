@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import Button from '../components/Button'
 import Card from '../components/Card'
 
@@ -66,8 +66,14 @@ function Login({ onLogin }) {
           </Button>
         </form>
 
-        <p className="text-center text-xs text-gray-400 mt-4">
+        <p className="text-center text-xs text-gray-400 mt-2">
           Coba: emilys / emilyspass
+        </p>
+        <p className="text-center text-sm text-gray-500 mt-3">
+          Belum punya akun?{' '}
+          <Link to="/register" className="text-blue-500 hover:underline">
+            Register
+          </Link>
         </p>
       </Card>
     </div>
