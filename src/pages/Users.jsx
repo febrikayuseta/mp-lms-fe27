@@ -137,7 +137,8 @@ function Users() {
 
       {/* TABLE */}
       <Card className="p-0 overflow-hidden">
-        <table className="w-full text-left">
+        <div className="overflow-x-auto">
+        <table className="w-full text-left min-w-[500px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-4 py-3 text-sm font-semibold text-gray-600">Nama</th>
@@ -176,14 +177,15 @@ function Users() {
             ))}
           </tbody>
         </table>
+        </div>
       </Card>
 
       {/* PAGINATION */}
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
         <p className="text-sm text-gray-400">
           Halaman {page} dari {totalPages} &bull; Total {total} user
         </p>
-        <div className="flex gap-1">
+        <div className="flex flex-wrap justify-center gap-1">
           <Button
             variant="secondary"
             onClick={() => setPage((p) => p - 1)}

@@ -9,7 +9,7 @@ const style = ({ isActive }) => {
 
 function Navbar({ user, onLogout }) {
   return (
-    <nav className="flex items-center gap-1 px-6 py-3 bg-white border-b border-gray-200 shadow-sm">
+    <nav className="flex flex-wrap items-center gap-1 px-4 py-3 bg-white border-b border-gray-200 shadow-sm">
       <NavLink to="/" className={style}>Home</NavLink>
       <NavLink to="/about" className={style}>About</NavLink>
       <NavLink to="/dashboard" className={style}>Dashboard</NavLink>
