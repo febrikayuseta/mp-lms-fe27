@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import TugasList from '../components/TugasList'
+import Button from '../components/Button'
 
-// Halaman privat — hanya bisa diakses saat login
 function Dashboard({ user }) {
   const [tugas, setTugas] = useState([
     { id: 1, teks: 'Belajar React' },
@@ -18,9 +18,7 @@ function Dashboard({ user }) {
       alert('Tugas tidak boleh kosong')
       return
     }
-
-    const baru = { id: Date.now(), teks: teks }
-    setTugas([...tugas, baru])
+    setTugas([...tugas, { id: Date.now(), teks }])
     setTeks('')
   }
 
@@ -30,9 +28,7 @@ function Dashboard({ user }) {
   }
 
   function simpanEdit(id) {
-    setTugas(
-      tugas.map((t) => (t.id === id ? { ...t, teks: editTeks } : t))
-    )
+    setTugas(tugas.map((t) => (t.id === id ? { ...t, teks: editTeks } : t)))
     setEditId(null)
     setEditTeks('')
   }
@@ -50,7 +46,6 @@ function Dashboard({ user }) {
         Kelola tugas harianmu dengan mudah
       </p>
 
-      {/* CREATE */}
       <div className="flex gap-2 mb-6">
         <input
           value={teks}
@@ -59,19 +54,11 @@ function Dashboard({ user }) {
           placeholder="Tulis tugas baru..."
           className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
         />
-        <button
-          onClick={tambah}
-          className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-sm cursor-pointer transition"
-        >
-          Tambah
-        </button>
+        <Button onClick={tambah} className="py-3 px-6 rounded-xl">Tambah</Button>
       </div>
 
-      {/* READ + UPDATE + DELETE */}
       {tugas.length === 0 ? (
-        <p className="text-center text-gray-400 py-8">
-          Belum ada tugas. Yuk tambah!
-        </p>
+        <p className="text-center text-gray-400 py-8">Belum ada tugas. Yuk tambah!</p>
       ) : (
         <TugasList
           tugas={tugas}

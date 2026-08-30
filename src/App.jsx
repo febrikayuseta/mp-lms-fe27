@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import AdminPanel from './pages/AdminPanel'
 import Users from './pages/Users'
+import UserDetail from './pages/UserDetail'
 
 function App() {
   // Ambil user dari localStorage saat pertama kali load
@@ -74,6 +75,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <Users />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Detail user — butuh token */}
+          <Route
+            path="/users/:id"
+            element={
+              <ProtectedRoute>
+                <UserDetail />
               </ProtectedRoute>
             }
           />
