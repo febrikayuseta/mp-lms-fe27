@@ -2,25 +2,25 @@ import { NavLink } from 'react-router-dom'
 
 function Navbar({ user, onLogout }) {
   return (
-    <nav className="bg-blue-900 shadow-lg sticky top-0 z-50">
+    <nav className="bg-blue-600 shadow-lg sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-0">
         <div className="flex flex-wrap items-center gap-1 h-16">
 
-          {/* Logo */}
           <NavLink to="/" className="flex items-center mr-6">
             <span className="text-white font-bold text-lg tracking-tight">Feb LMS</span>
           </NavLink>
 
-          {/* Nav links */}
           <div className="flex items-center gap-1 flex-1 flex-wrap">
             <NavItem to="/">Home</NavItem>
             <NavItem to="/about">About</NavItem>
             {user && <NavItem to="/dashboard">Dashboard</NavItem>}
             {user && <NavItem to="/users">Users</NavItem>}
+            {user && <NavItem to="/todos">Tugas</NavItem>}
+            {user && <NavItem to="/posts">Materi</NavItem>}
+            {user && <NavItem to="/quotes">Quiz</NavItem>}
             {user?.role === 'admin' && <NavItem to="/admin">Admin</NavItem>}
           </div>
 
-          {/* Auth */}
           <div className="flex items-center gap-2">
             {user ? (
               <>
@@ -30,7 +30,7 @@ function Navbar({ user, onLogout }) {
                 </div>
                 <button
                   onClick={onLogout}
-                  className="px-4 py-1.5 text-sm font-medium text-blue-900 bg-white hover:bg-slate-100 rounded-lg transition cursor-pointer"
+                  className="px-4 py-1.5 text-sm font-medium text-blue-600 bg-white hover:bg-slate-100 rounded-lg transition cursor-pointer"
                 >
                   Logout
                 </button>
@@ -39,13 +39,13 @@ function Navbar({ user, onLogout }) {
               <>
                 <NavLink
                   to="/register"
-                  className="px-4 py-1.5 text-sm font-medium text-white border border-blue-600 hover:border-white rounded-lg transition"
+                  className="px-4 py-1.5 text-sm font-medium text-white border border-blue-300 hover:border-white rounded-lg transition"
                 >
                   Register
                 </NavLink>
                 <NavLink
                   to="/login"
-                  className="px-4 py-1.5 text-sm font-medium text-blue-900 bg-amber-500 hover:bg-amber-400 rounded-lg transition"
+                  className="px-4 py-1.5 text-sm font-medium text-blue-700 bg-amber-500 hover:bg-amber-400 rounded-lg transition"
                 >
                   Login
                 </NavLink>

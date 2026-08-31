@@ -12,6 +12,9 @@ import Register from './pages/Register'
 import AdminPanel from './pages/AdminPanel'
 import Users from './pages/Users'
 import UserDetail from './pages/UserDetail'
+import Todos from './pages/Todos'
+import Posts from './pages/Posts'
+import Quotes from './pages/Quotes'
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -65,6 +68,18 @@ function App() {
 
           <Route path="/users/:id" element={
             <ProtectedRoute><UserDetail /></ProtectedRoute>
+          } />
+
+          <Route path="/todos" element={
+            <ProtectedRoute><Todos /></ProtectedRoute>
+          } />
+
+          <Route path="/posts" element={
+            <ProtectedRoute><Posts /></ProtectedRoute>
+          } />
+
+          <Route path="/quotes" element={
+            <ProtectedRoute><Quotes /></ProtectedRoute>
           } />
 
           <Route path="/admin" element={

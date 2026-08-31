@@ -18,6 +18,8 @@ function Users() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [age, setAge] = useState('')
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [editId, setEditId] = useState(null)
   const [showForm, setShowForm] = useState(false)
 
@@ -33,24 +35,25 @@ function Users() {
 
   async function handleAdd() {
     if (!firstName.trim() || !lastName.trim()) { alert('Nama depan dan belakang wajib diisi'); return }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Format email tidak valid'); return }
     try {
-      const result = await post('/users/add', { firstName, lastName, age: Number(age) })
+      const result = await post('/users/add', { firstName, lastName, age: Number(age), email, username })
       setUsers([result, ...users])
       resetForm()
     } catch (err) { alert('Gagal menambah user: ' + err.message) }
   }
 
-  function resetForm() { setEditId(null); setFirstName(''); setLastName(''); setAge(''); setShowForm(false) }
+  function resetForm() { setEditId(null); setFirstName(''); setLastName(''); setAge(''); setEmail(''); setUsername(''); setShowForm(false) }
 
   function startEdit(user) {
     setEditId(user.id); setFirstName(user.firstName); setLastName(user.lastName)
-    setAge(String(user.age)); setShowForm(true)
+    setAge(String(user.age)); setEmail(user.email || ''); setUsername(user.username || ''); setShowForm(true)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   async function handleUpdate() {
     try {
-      const result = await put(`/users/${editId}`, { firstName, lastName, age: Number(age) })
+      const result = await put(`/users/${editId}`, { firstName, lastName, age: Number(age), email, username })
       setUsers(users.map((u) => (u.id === editId ? result : u)))
       resetForm()
     } catch (err) { alert('Gagal mengupdate user: ' + err.message) }
@@ -66,10 +69,9 @@ function Users() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Page header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-black text-blue-900">Data Users</h1>
+          <h1 className="text-2xl font-black text-blue-700">Data Users</h1>
           <p className="text-slate-400 text-sm mt-0.5">Total {total} user terdaftar</p>
         </div>
         <Button onClick={() => { resetForm(); setShowForm(!showForm) }} variant={showForm ? 'secondary' : 'primary'}>
@@ -77,10 +79,9 @@ function Users() {
         </Button>
       </div>
 
-      {/* FORM */}
       {showForm && (
         <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 mb-6">
-          <h2 className="font-bold text-blue-900 mb-4">{editId ? 'Edit User' : 'Tambah User Baru'}</h2>
+          <h2 className="font-bold text-blue-700 mb-4">{editId ? 'Edit User' : 'Tambah User Baru'}</h2>
           <div className="grid sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5">Nama Depan</label>
@@ -97,6 +98,16 @@ function Users() {
               <input type="number" placeholder="20" value={age} onChange={(e) => setAge(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
             </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Username</label>
+              <input type="text" placeholder="johndoe" value={username} onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Email</label>
+              <input type="email" placeholder="john@email.com" value={email} onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+            </div>
           </div>
           <div className="flex gap-2 mt-4">
             {editId ? (
@@ -111,7 +122,6 @@ function Users() {
         </div>
       )}
 
-      {/* TABLE */}
       <div className="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
         {loading ? (
           <div className="text-center py-20 text-slate-400">
@@ -133,18 +143,9 @@ function Users() {
                 {users.map((u) => (
                   <tr key={u.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-3">
-                        {u.image ? (
-                          <img src={u.image} alt={u.firstName} className="w-8 h-8 rounded-full object-cover" />
-                        ) : (
-                          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold">
-                            {u.firstName?.[0]}
-                          </div>
-                        )}
-                        <div>
-                          <p className="text-sm font-semibold text-slate-700">{u.firstName} {u.lastName}</p>
-                          <p className="text-xs text-slate-400">@{u.username}</p>
-                        </div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-700">{u.firstName} {u.lastName}</p>
+                        <p className="text-xs text-slate-400">@{u.username}</p>
                       </div>
                     </td>
                     <td className="px-5 py-3.5 text-sm text-slate-500">{u.email}</td>
@@ -171,7 +172,6 @@ function Users() {
         )}
       </div>
 
-      {/* PAGINATION */}
       {!loading && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-5">
           <p className="text-sm text-slate-400">
@@ -196,7 +196,7 @@ function Users() {
                   <button key={item} onClick={() => setPage(item)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border cursor-pointer transition ${
                       page === item
-                        ? 'bg-blue-700 text-white border-blue-700'
+                        ? 'bg-blue-500 text-white border-blue-500'
                         : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                     }`}>
                     {item}

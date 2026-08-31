@@ -21,8 +21,7 @@ const features = [
 function Home({ user }) {
   return (
     <div>
-      {/* Hero */}
-      <div className="bg-linear-to-br from-blue-900 to-blue-700 rounded-3xl mx-auto max-w-6xl px-8 py-20 text-center mb-12">
+      <div className="bg-linear-to-br from-blue-600 to-blue-500 rounded-3xl mx-auto max-w-6xl px-8 py-20 text-center mb-12">
         <span className="inline-block bg-amber-500/20 text-amber-300 text-xs font-semibold px-3 py-1 rounded-full mb-6 tracking-widest uppercase">
           Learning Management System
         </span>
@@ -58,7 +57,6 @@ function Home({ user }) {
         )}
       </div>
 
-      {/* Stats */}
       <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12">
         {[
           { value: '208+', label: 'Data User' },
@@ -66,15 +64,14 @@ function Home({ user }) {
           { value: 'CRUD', label: 'Full API' },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 text-center">
-            <p className="text-3xl font-black text-blue-900">{s.value}</p>
+            <p className="text-3xl font-black text-blue-700">{s.value}</p>
             <p className="text-slate-500 text-sm mt-1">{s.label}</p>
           </div>
         ))}
       </div>
 
-      {/* Features */}
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold text-blue-900 text-center mb-8">Fitur Utama</h2>
+        <h2 className="text-2xl font-bold text-blue-700 text-center mb-8">Fitur Utama</h2>
         <div className="grid sm:grid-cols-3 gap-6">
           {features.map((f) => (
             <div
@@ -84,7 +81,7 @@ function Home({ user }) {
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">
                 {f.icon}
               </div>
-              <h3 className="font-bold text-blue-900 mb-2">{f.title}</h3>
+              <h3 className="font-bold text-blue-700 mb-2">{f.title}</h3>
               <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
             </div>
           ))}

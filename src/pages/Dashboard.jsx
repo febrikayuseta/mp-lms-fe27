@@ -26,17 +26,15 @@ function Dashboard({ user }) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Welcome banner */}
-      <div className="bg-linear-to-r from-blue-900 to-blue-700 rounded-2xl p-6 mb-8 flex items-center justify-between">
+      <div className="bg-linear-to-r from-blue-600 to-blue-500 rounded-2xl p-6 mb-8 flex items-center justify-between">
         <div>
           <p className="text-blue-300 text-sm mb-1">Selamat datang,</p>
           <h1 className="text-2xl font-black text-white">{user?.username || user?.email}</h1>
         </div>
       </div>
 
-      {/* Task input */}
       <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-5 mb-6">
-        <h2 className="font-bold text-blue-900 mb-3">Tambah Tugas Baru</h2>
+        <h2 className="font-bold text-blue-700 mb-3">Tambah Tugas Baru</h2>
         <div className="flex gap-2">
           <input
             value={teks}
@@ -47,18 +45,17 @@ function Dashboard({ user }) {
           />
           <button
             onClick={tambah}
-            className="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-xl text-sm transition cursor-pointer"
+            className="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl text-sm transition cursor-pointer"
           >
             Tambah
           </button>
         </div>
       </div>
 
-      {/* Task list */}
       <div className="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-          <h2 className="font-bold text-blue-900">Daftar Tugas</h2>
-          <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+          <h2 className="font-bold text-blue-700">Daftar Tugas</h2>
+          <span className="bg-blue-100 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-full">
             {tugas.length} tugas
           </span>
         </div>

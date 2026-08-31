@@ -66,8 +66,7 @@ function Register() {
     <div className="min-h-[80vh] flex items-center justify-center py-8">
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl overflow-hidden flex">
 
-        {/* Left panel */}
-        <div className="hidden md:flex flex-col justify-between bg-blue-900 text-white p-10 w-2/5">
+        <div className="hidden md:flex flex-col justify-between bg-blue-600 text-white p-10 w-2/5">
           <div>
             <p className="text-white font-bold text-xl mb-8">Feb LMS</p>
             <h2 className="text-3xl font-black leading-tight mb-3">
@@ -87,9 +86,8 @@ function Register() {
           </div>
         </div>
 
-        {/* Right panel */}
         <div className="flex-1 p-8 sm:p-12 overflow-y-auto">
-          <h1 className="text-2xl font-black text-blue-900 mb-1">Buat Akun</h1>
+          <h1 className="text-2xl font-black text-blue-700 mb-1">Buat Akun</h1>
           <p className="text-slate-400 text-sm mb-6">Lengkapi data diri kamu</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -124,14 +122,14 @@ function Register() {
             )}
 
             <button type="submit" disabled={loading}
-              className="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-xl transition disabled:opacity-50 cursor-pointer mt-1">
+              className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition disabled:opacity-50 cursor-pointer mt-1">
               {loading ? 'Mendaftarkan...' : 'Buat Akun'}
             </button>
           </form>
 
           <p className="text-center text-sm text-slate-500 mt-5">
             Sudah punya akun?{' '}
-            <Link to="/login" className="text-blue-700 font-semibold hover:underline">Login</Link>
+            <Link to="/login" className="text-blue-600 font-semibold hover:underline">Login</Link>
           </p>
         </div>
       </div>
